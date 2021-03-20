@@ -87,7 +87,8 @@ class MoonPhase(SampleBase):
             phaseName = phase_data[self.PHASE_NAME]
             percent = float(phase_data[self.PERCENT])
 
-            if self.getColumnsToFill(percent) == 0: 
+            numColumnsToFill = self.getNumColumnsToFill(percent)
+            if numColumnsToFill == 0 or percent > 50:
                 self.drawCircle(self.getCircleBoundaries(self.baseMidX, self.midY))
 
             if percent == 50:
@@ -119,7 +120,7 @@ class MoonPhase(SampleBase):
             time.sleep(900)
 
     def drawSecondCircle(self, phaseName, percent):
-        columnsToFill = self.getColumnsToFill(percent)
+        columnsToFill = self.getNumColumnsToFill(percent)
         secondCircleDirection = self.getSecondCircleDirection(phaseName, percent)
         if secondCircleDirection == self.LEFT:
             self.secondMidX = self.baseMidX - columnsToFill
@@ -226,7 +227,7 @@ class MoonPhase(SampleBase):
             'startingPoint': xPoint,
         }
 
-    def getColumnsToFill(self, percent):
+    def getNumColumnsToFill(self, percent):
         numColumns = self.radius * 2
         if percent < 50:
             columnsToFill = math.floor((percent / 100 ) * numColumns)
