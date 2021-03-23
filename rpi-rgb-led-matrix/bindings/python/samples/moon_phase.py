@@ -68,8 +68,8 @@ class MoonPhase(SampleBase):
 
     def run(self):
         self.initDefaults()
-        self.runNormal()
-        #self.runCycle()
+        #self.runNormal()
+        self.runCycle()
 
     def runNormal(self, date = None):
         isCycleRun = False if date == None else True
@@ -119,24 +119,24 @@ class MoonPhase(SampleBase):
 
             time.sleep(900)
 
-    def drawSecondCircle(self, phaseName, percent):
-        columnsToFill = self.getNumColumnsToFill(percent)
-        secondCircleDirection = self.getSecondCircleDirection(phaseName, percent)
-        if secondCircleDirection == self.LEFT:
-            self.secondMidX = self.baseMidX - columnsToFill
-        else:
-            self.secondMidX = self.baseMidX + columnsToFill
-
-        secondCircleBoundaries = self.getCircleBoundaries(self.secondMidX, self.midY)
-        self.drawCircle(secondCircleBoundaries, True)
-
     def runCycle(self):
         self.initDefaults()
 
         for date in self.CYCLE_DAYS:
             self.canvas.Clear()
             self.runNormal(date)
-            time.sleep(1)  
+            time.sleep(1)
+
+    def drawSecondCircle(self, phaseName, percent):
+        numColumnsToFill = self.getNumColumnsToFill(percent)
+        secondCircleDirection = self.getSecondCircleDirection(phaseName, percent)
+        if secondCircleDirection == self.LEFT:
+            self.secondMidX = self.baseMidX - numColumnsToFill
+        else:
+            self.secondMidX = self.baseMidX + numColumnsToFill
+
+        secondCircleBoundaries = self.getCircleBoundaries(self.secondMidX, self.midY)
+        self.drawCircle(secondCircleBoundaries, True)
 
     def isWithinCanvas(self, x, y):
         if (x >= 0 and x < self.matrix.width) and (y >= 0 and y < self.canvas.height):
@@ -172,28 +172,28 @@ class MoonPhase(SampleBase):
         coordinate_dictionary = {}
 
         while y <= x:
-            key = '{0}-{1}'.format(x + midX, y + midY)
+            key = '{0}|{1}'.format(float(x + midX), float(y + midY))
             coordinate_dictionary[key] = 0
 
-            key = '{0}-{1}'.format(y + midX, x + midY)
+            key = '{0}|{1}'.format(float(y + midX), float(x + midY))
             coordinate_dictionary[key] = 0
 
-            key = '{0}-{1}'.format(-x + midX, y + midY)
+            key = '{0}|{1}'.format(float(-x + midX), float(y + midY))
             coordinate_dictionary[key] = 0
 
-            key = '{0}-{1}'.format(-y + midX, x + midY)
+            key = '{0}|{1}'.format(float(-y + midX), float(x + midY))
             coordinate_dictionary[key] = 0
 
-            key = '{0}-{1}'.format(-x + midX, -y + midY)
+            key = '{0}|{1}'.format(float(-x + midX), float(-y + midY))
             coordinate_dictionary[key] = 0
 
-            key = '{0}-{1}'.format(-y + midX, -x + midY)
+            key = '{0}|{1}'.format(float(-y + midX), float(-x + midY))
             coordinate_dictionary[key] = 0
 
-            key = '{0}-{1}'.format(x + midX, -y + midY)
+            key = '{0}|{1}'.format(float(x + midX), float(-y + midY))
             coordinate_dictionary[key] = 0
 
-            key = '{0}-{1}'.format(y + midX, -x + midY)
+            key = '{0}|{1}'.format(float(y + midX), float(-x + midY))
             coordinate_dictionary[key] = 0
             y += 1
 
@@ -230,12 +230,12 @@ class MoonPhase(SampleBase):
     def getNumColumnsToFill(self, percent):
         numColumns = self.radius * 2
         if percent < 50:
-            columnsToFill = math.floor((percent / 100 ) * numColumns)
+            numColumnsToFill = math.floor((percent / 100 ) * numColumns)
         else:
             actualizedPercent = 100 - percent
-            columnsToFill = math.floor((actualizedPercent / 100 ) * numColumns)
+            numColumnsToFill = math.floor((actualizedPercent / 100 ) * numColumns)
 
-        return columnsToFill
+        return numColumnsToFill
 
     def getDate(self):
         date = datetime.now()
@@ -259,14 +259,10 @@ class MoonPhase(SampleBase):
 
     def drawCircle(self, boundaries, isSecondCircle = False):
         for coordinateString in boundaries.keys():
-            coordinates = coordinateString.split('-')
-            if not coordinates:
-                continue
+            coordinates = coordinateString.split('|')
 
-            x = self.__int__(coordinates[0])
-            y = self.__int__(coordinates[1])
-            if not x or not y:
-                continue
+            x = float(coordinates[0])
+            y = float(coordinates[1])
 
             if self.isWithinCanvas(x, y):
                 if isSecondCircle:
@@ -294,12 +290,6 @@ class MoonPhase(SampleBase):
             for y in range(0, self.canvas.height):
                 if self.isWithinSecondCircle(x, y) and self.isWithinBaseCircle(x, y):
                     self.canvas.SetPixel(x, y, 255, 255, 255)
-
-    def __int__(self, number):
-        try:
-            return int(float(number))
-        except:
-            pass
 
 # Main function
 if __name__ == "__main__":
