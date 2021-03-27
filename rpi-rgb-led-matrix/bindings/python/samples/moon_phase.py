@@ -5,6 +5,7 @@ import math
 from constants import Constants
 import time
 from rgbmatrix import graphics
+from typing import Dict
 
 class MoonPhase(SampleBase):
 
@@ -60,18 +61,18 @@ class MoonPhase(SampleBase):
         super(MoonPhase, self).__init__(*args, **kwargs)
         self.constants = Constants()
 
-    def initDefaults(self):
+    def initDefaults(self) -> None:
         self.canvas = self.matrix.CreateFrameCanvas()
-        self.baseMidX = self.matrix.width / 2
-        self.midY = (self.canvas.height / 2) - 3
-        self.radius = 12
+        self.baseMidX: int = math.floor(self.matrix.width / 2)
+        self.midY: int = math.floor((self.canvas.height / 2)) - 3
+        self.radius: int = 12
 
-    def run(self):
+    def run(self) -> None:
         self.initDefaults()
-        #self.runNormal()
-        self.runCycle()
+        self.runNormal()
+        #self.runCycle()
 
-    def runNormal(self, date = None):
+    def runNormal(self, date: str = None) -> None:
         isCycleRun = False if date == None else True
         currentDate = date if date != None else self.getDate()
 
@@ -119,7 +120,7 @@ class MoonPhase(SampleBase):
 
             time.sleep(900)
 
-    def runCycle(self):
+    def runCycle(self) -> None:
         self.initDefaults()
 
         for date in self.CYCLE_DAYS:
@@ -127,45 +128,45 @@ class MoonPhase(SampleBase):
             self.runNormal(date)
             time.sleep(1)
 
-    def drawSecondCircle(self, phaseName, percent):
+    def drawSecondCircle(self, phaseName: str, percent: float) -> None:
         numColumnsToFill = self.getNumColumnsToFill(percent)
         secondCircleDirection = self.getSecondCircleDirection(phaseName, percent)
         if secondCircleDirection == self.LEFT:
-            self.secondMidX = self.baseMidX - numColumnsToFill
+            self.secondMidX: int = self.baseMidX - numColumnsToFill
         else:
-            self.secondMidX = self.baseMidX + numColumnsToFill
+            self.secondMidX: int = self.baseMidX + numColumnsToFill
 
         secondCircleBoundaries = self.getCircleBoundaries(self.secondMidX, self.midY)
         self.drawCircle(secondCircleBoundaries, True)
 
-    def isWithinCanvas(self, x, y):
+    def isWithinCanvas(self, x: int, y: int) -> bool:
         if (x >= 0 and x < self.matrix.width) and (y >= 0 and y < self.canvas.height):
             return True
 
         return False
 
-    def isEarlyWaxing(self, phaseName, percent):
+    def isEarlyWaxing(self, phaseName: str, percent: float) -> bool:
         return percent < 50 and self.WAXING in phaseName.lower()
 
-    def isLateWaning(self, phaseName, percent):
+    def isLateWaning(self, phaseName: str, percent: bool) -> bool:
         return percent > 50 and self.WANING in phaseName.lower()
 
-    def isWithinBaseCircle(self, x, y):
+    def isWithinBaseCircle(self, x: int, y: int) -> bool:
         return math.pow(x - self.baseMidX, 2) + math.pow(y - self.midY, 2) < math.pow(self.radius, 2)
 
-    def isWithinSecondCircle(self, x, y):
+    def isWithinSecondCircle(self, x: int, y: int) -> bool:
         return math.pow(x - self.secondMidX, 2) + math.pow(y - self.midY, 2) < math.pow(self.radius, 2)
 
-    def isOutsideSecondCircle(self, x, y):
+    def isOutsideSecondCircle(self, x: int, y: int) -> bool:
         return math.pow(x - self.secondMidX, 2) + math.pow(y - self.midY, 2) > math.pow(self.radius, 2)
 
-    def isOutsideBaseCircle(self, x, y):
+    def isOutsideBaseCircle(self, x: int, y: int) -> bool:
         return math.pow(x - self.baseMidX, 2) + math.pow(y - self.midY, 2) < math.pow(self.radius, 2)
 
-    def didDateChangeSinceLastCheck(self, currentDate, newDate):
+    def didDateChangeSinceLastCheck(self, currentDate: str, newDate: str) -> bool:
         return newDate != currentDate
 
-    def getCircleBoundaries(self, midX, midY):
+    def getCircleBoundaries(self, midX: int, midY: int) -> Dict[str, int]:
         x = self.radius
         y = 0
         radiusError = 1 - x
@@ -203,15 +204,15 @@ class MoonPhase(SampleBase):
                 x -= 1
                 radiusError += 2 * (y -x + 1)
 
-        return coordinate_dictionary  
+        return coordinate_dictionary
 
-    def getSecondCircleDirection(self, phaseName, percent):
+    def getSecondCircleDirection(self, phaseName: str, percent: str) -> str:
         if self.isEarlyWaxing(phaseName, percent) or self.isLateWaning(phaseName, percent):
             return self.LEFT
 
         return self.RIGHT
 
-    def getTextAndStartingPoint(self, phaseName, percent):
+    def getTextAndStartingPoint(self, phaseName: str, percent: float) -> Dict:
         if self.MILESTONES.get(phaseName) != None:
             text = self.MILESTONES.get(phaseName)
             xPoint = 7
@@ -227,7 +228,7 @@ class MoonPhase(SampleBase):
             'startingPoint': xPoint,
         }
 
-    def getNumColumnsToFill(self, percent):
+    def getNumColumnsToFill(self, percent: float) -> int:
         numColumns = self.radius * 2
         if percent < 50:
             numColumnsToFill = math.floor((percent / 100 ) * numColumns)
@@ -237,14 +238,14 @@ class MoonPhase(SampleBase):
 
         return numColumnsToFill
 
-    def getDate(self):
+    def getDate(self) -> str:
         date = datetime.now()
         day = str(date.day).zfill(2)
         month = str(date.month).zfill(2)
         year = date.year
         return '{0}-{1}-{2}'.format(year, month, day)
 
-    def drawAndFillHalfMoon(self, phaseName):
+    def drawAndFillHalfMoon(self, phaseName: str) -> None:
         if self.FIRST in phaseName.lower():
             xStartRange = self.baseMidX
             xEndRange = self.matrix.width
@@ -257,7 +258,7 @@ class MoonPhase(SampleBase):
                 if self.isWithinBaseCircle(x, y):
                     self.canvas.SetPixel(x, y, 255, 255, 255)
 
-    def drawCircle(self, boundaries, isSecondCircle = False):
+    def drawCircle(self, boundaries: Dict[str, float], isSecondCircle: bool = False) -> None:
         for coordinateString in boundaries.keys():
             coordinates = coordinateString.split('|')
 
@@ -271,7 +272,7 @@ class MoonPhase(SampleBase):
                 else:
                     self.canvas.SetPixel(x, y, 255, 255, 255)
 
-    def drawText(self, phaseName, percent):
+    def drawText(self, phaseName: str, percent: float) -> None:
         font = graphics.Font()
         font.LoadFont("../../../fonts/5x7.bdf")
         textColor = graphics.Color(255, 255, 255)
@@ -279,13 +280,13 @@ class MoonPhase(SampleBase):
 
         graphics.DrawText(self.canvas, font, textData['startingPoint'], self.canvas.height, textColor, textData['text'])
 
-    def fillInEarlyMoon(self):
+    def fillInEarlyMoon(self) -> None:
         for x in range(0, self.matrix.width):
             for y in range(0, self.canvas.height):
                 if self.isWithinBaseCircle(x, y) and self.isOutsideSecondCircle(x, y):
                     self.canvas.SetPixel(x, y, 255, 255, 255)
 
-    def fillInLateMoon(self):
+    def fillInLateMoon(self) -> None:
         for x in range(0, self.matrix.width):
             for y in range(0, self.canvas.height):
                 if self.isWithinSecondCircle(x, y) and self.isWithinBaseCircle(x, y):
