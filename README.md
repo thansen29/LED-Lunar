@@ -13,11 +13,18 @@
 ## Instructions for setup
 
 - Set up your raspberry pi first, sudo apt-get update then sudo apt-get upgrade.
-- Clone this repo. cd rpi-rgb-led-matrix/bindings/python and run `make build`.
+- Clone this repo. cd rpi-rgb-led-matrix/bindings/python and run
+```
+sudo apt-get update && sudo apt-get install python3-dev python3-pillow -y
+make build-python PYTHON=$(which python3)
+sudo make install-python PYTHON=$(which python3)
+sudo make build
+```.
+Python3 is necessary for utilizing type hints
 - I highly recommend the hardware hack to solder a wire between pins 4 and 18. It solves the flickering problem and is a must if you have a static image displayed. The code in this repo requires you to do the soldering. If you're using the hardware mod, then you'll also need to turn off onboard sound. In /boot/config.txt, change `dtparam=audio=on` to `dtparam=audio=off` and reboot.
 - Then you can cd into the directory and run
 ```
-sudo ./moon_phase --led-brightness 25 -m adafruit-hat-pwm --led-pwm-lsb-nanoseconds=50 -p7
+sudo python3 moon_phase.py --led-brightness 25 -m adafruit-hat-pwm --led-pwm-lsb-nanoseconds=50 -p7
 ```
 - Tweak those options as you see fit, this is just what worked for me.
 
@@ -27,7 +34,7 @@ To run the script on boot, I used crontab.
 `sudo crontab -e`
 ```
 @reboot cd /rpi-rgb-led-matrix/bindings/python/samples/
-sudo ./moon_phase.py --led-brightness 25 --led-pwm-lsb-nanoseconds=50 -p7 -m adafruit-hat-pwm
+sudo python3 moon_phase.py --led-brightness 25 --led-pwm-lsb-nanoseconds=50 -p7 -m adafruit-hat-pwm
 ```
 
 <i>Disclaimer: you might need to tweak the path a bit </i>
