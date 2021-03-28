@@ -31,11 +31,10 @@ sudo python3 moon_phase.py --led-brightness 25 -m adafruit-hat-pwm --led-pwm-lsb
 - Tweak those options as you see fit, this is just what worked for me.
 
 ## Run script on boot
- todo edit this, use launcher.sh, create that file. move to directory then run that. or does this not work?
 To run the script on boot, I used crontab.
 `sudo crontab -e`
 ```
-@reboot cd /rpi-rgb-led-matrix/bindings/python/samples/
+@reboot cd /home/pi/../rpi-rgb-led-matrix/bindings/python/samples && sudo python3 moon_phase.py --led-brightness 25 --led-pwm-lsb-nanaseconds=50 -p7 -m adafruit-hat-pwm
 sudo python3 moon_phase.py --led-brightness 25 --led-pwm-lsb-nanoseconds=50 -p7 -m adafruit-hat-pwm
 ```
 
