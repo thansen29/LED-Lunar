@@ -41,5 +41,5 @@ To run the script on boot, I used crontab.
 
 ## Notes
 - All of this code to interact with the matrix comes from https://github.com/hzeller/rpi-rgb-led-matrix. The only code I wrote is in the root level of this directory, and the moon_phase.py file.
-- Most of the code isn't hard coded for this size panel, but you'll need to tweak the text location to get it properly centered.
+- Most of the code isn't hard coded for this size panel, but you'll need to tweak a few things if using a different sized matrix, like the text location, the circle's center point vertically, and radius of the circle.
 - These instructions worked with my hardware. Mileage may vary with different setups.
