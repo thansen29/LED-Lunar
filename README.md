@@ -18,8 +18,6 @@
 sudo apt-get update && sudo apt-get install python3-dev python3-pillow -y
 make build-python PYTHON=$(which python3)
 sudo make install-python PYTHON=$(which python3)
-sudo make build
-
 ```
 <i>Python3 is necessary for utilizing type hints</i>
 
