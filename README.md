@@ -32,7 +32,7 @@ sudo python3 moon_phase.py --led-brightness 25 -m adafruit-hat-pwm --led-pwm-lsb
 To run the script on boot, I used crontab.
 `sudo crontab -e`
 ```
-@reboot cd /home/pi/../rpi-rgb-led-matrix/bindings/python/samples && sudo python3 moon_phase.py --led-brightness 25 --led-pwm-lsb-nanaseconds=50 -p7 -m adafruit-hat-pwm
+@reboot cd /home/pi/../rpi-rgb-led-matrix/bindings/python/samples && sudo python3 moon_phase.py --led-brightness 25 -m adafruit-hat-pwm --led-pwm-lsb-nanoseconds=50 -p7
 ```
 
 <i>Disclaimer: you might need to tweak the path a bit </i>
