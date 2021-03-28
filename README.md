@@ -20,8 +20,8 @@ make build-python PYTHON=$(which python3)
 sudo make install-python PYTHON=$(which python3)
 sudo make build
 
-<i>Python3 is necessary for utilizing type hints</i>
 ```
+<i>Python3 is necessary for utilizing type hints</i>
 
 - I highly recommend the hardware hack to solder a wire between pins 4 and 18. It solves the flickering problem and is a must if you have a static image displayed. The code in this repo requires you to do the soldering. If you're using the hardware mod, then you'll also need to turn off onboard sound. In /boot/config.txt, change `dtparam=audio=on` to `dtparam=audio=off` and reboot.
 - Then you can cd into the directory and run
@@ -35,7 +35,6 @@ To run the script on boot, I used crontab.
 `sudo crontab -e`
 ```
 @reboot cd /home/pi/../rpi-rgb-led-matrix/bindings/python/samples && sudo python3 moon_phase.py --led-brightness 25 --led-pwm-lsb-nanaseconds=50 -p7 -m adafruit-hat-pwm
-sudo python3 moon_phase.py --led-brightness 25 --led-pwm-lsb-nanoseconds=50 -p7 -m adafruit-hat-pwm
 ```
 
 <i>Disclaimer: you might need to tweak the path a bit </i>
