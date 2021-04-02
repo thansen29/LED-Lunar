@@ -9,6 +9,7 @@
 - Raspberry Pi Zero WH
 - Adafruit RGB Matrix Bonnet
 - 5V 4A power supply
+- Normally Open (NO) power button
 
 ## Instructions for setup
 
