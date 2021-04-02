@@ -63,8 +63,8 @@ class MoonPhase(SampleBase):
 
     def run(self) -> None:
         self.__init_defaults()
-        #self.__run_normal()
-        self.__run_cycle()
+        self.__run_normal()
+        #self.__run_cycle()
 
     def __init_defaults(self) -> None:
         self.canvas = self.matrix.CreateFrameCanvas()
