@@ -43,3 +43,8 @@ To run the script on boot, I used crontab.
 - Most of the code isn't hard coded for this size panel, but you'll need to tweak a few things if using a different sized matrix, like the text location, the circle's center point vertically, and radius of the circle.
 - Raspberry pis don't have a real time clock by default. So internet connection is required for accurately updating the time, unless you buy a RTC and connect it.
 - These instructions worked with my hardware. Mileage may vary with different setups.
+
+## Future potential work
+- Add a real time clock so that internet is not required
+- Add a potentiometer to change the brightness while the program is running
+- 3D print a backing to cover everything up
