@@ -88,10 +88,6 @@ class MoonPhase(SampleBase):
             phase_name = phase_data[self.PHASE_NAME]
             percent = float(phase_data[self.PERCENT])
 
-            num_columns_to_fill = self.__get_num_columns_to_fill(percent)
-            if num_columns_to_fill == 0 or percent > 50:
-                self.__draw_circle(self.__get_circle_boundaries(self.base_mid_x, self.mid_y))
-
             if percent == 50:
                 self.__draw_and_fill_half_moon(phase_name)
                 self.__draw_text(phase_name, percent)
@@ -103,10 +99,14 @@ class MoonPhase(SampleBase):
 
                 continue
 
+            num_columns_to_fill = self.__get_num_columns_to_fill(percent)
+            if num_columns_to_fill == 0 or percent > 50:
+                self.__draw_circle(self.__get_circle_boundaries(self.base_mid_x, self.mid_y))
+
             self.__draw_second_circle(phase_name, percent)
 
             if percent < 50:
-                self.__file_in_early_moon()
+                self.__fill_in_early_moon()
             elif percent > 50:
                 self.__fill_in_late_moon()
 
@@ -285,7 +285,7 @@ class MoonPhase(SampleBase):
             text_data['text']
         )
 
-    def __file_in_early_moon(self) -> None:
+    def __fill_in_early_moon(self) -> None:
         for x in range(0, self.matrix.width):
             for y in range(0, self.canvas.height):
                 if self.__is_within_base_circle(x, y) and self.__is_outside_second_circle(x, y):
