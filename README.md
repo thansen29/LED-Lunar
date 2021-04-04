@@ -48,3 +48,4 @@ To run the script on boot, I used crontab.
 - Add a real time clock so that internet is not required
 - Add a potentiometer to change the brightness while the program is running
 - 3D print a backing to cover everything up
+- Clean up the repo. Use submodules for utilizing rpi-rgb-led-matrix repo
