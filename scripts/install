@@ -1,0 +1,19 @@
+#!/bin/bash
+
+echo "Installing required dependencies. This may take some time (10-20 minutes-ish)..."
+
+# Pull submodule and ignore changes from script
+git submodule update --init --recursive
+git config submodule.matrix.ignore all
+
+cd submodules/matrix || exit
+echo "Running rgbmatrix installation..."
+
+make build-python PYTHON="$(which python3)"
+sudo make install-python PYTHON="$(which python3)"
+cd ../../
+
+make
+
+echo "If you didn't see any errors above, everything should be installed!"
+echo "$(tput bold)$(tput smso)$(tput setaf 2)Installation complete!$(tput sgr0) Play around with the examples in LED-Lunar/submodules/matrix/bindings/python/samples to make sure your matrix is working."
