@@ -14,18 +14,15 @@
 ## Instructions for setup
 
 - Set up your raspberry pi first, sudo apt-get update then sudo apt-get upgrade.
-- Clone this repo. cd rpi-rgb-led-matrix/bindings/python and run
+- Clone this repo. cd LED-Lunar and run
 ```
-sudo apt-get update && sudo apt-get install python3-dev python3-pillow -y
-make build-python PYTHON=$(which python3)
-sudo make install-python PYTHON=$(which python3)
+sudo sh scripts/install
 ```
-<i>Python3 is necessary for utilizing type hints</i>
 
 - I highly recommend the hardware hack to solder a wire between pins 4 and 18. It solves the flickering problem and is a must if you have a static image displayed. If you're using the hardware mod, then you'll also need to turn off onboard sound. In /boot/config.txt, change `dtparam=audio=on` to `dtparam=audio=off` and reboot.
-- Then you can cd into the samples directory and run
+- Then you can run
 ```
-sudo python3 moon_phase.py --led-brightness 25 -m adafruit-hat-pwm --led-pwm-lsb-nanoseconds=50 -p7
+sudo python3 src/moon_phase.py --led-brightness 25 -m adafruit-hat-pwm --led-pwm-lsb-nanoseconds=50 -p7
 ```
 - Tweak those options as you see fit, this is just what worked for me.
 
@@ -33,13 +30,12 @@ sudo python3 moon_phase.py --led-brightness 25 -m adafruit-hat-pwm --led-pwm-lsb
 To run the script on boot, I used crontab.
 `sudo crontab -e`
 ```
-@reboot cd /home/pi/../rpi-rgb-led-matrix/bindings/python/samples && sudo python3 moon_phase.py --led-brightness 25 -m adafruit-hat-pwm --led-pwm-lsb-nanoseconds=50 -p7
+@reboot cd /home/pi/Documents/LED-Lunar && sudo python3 src/moon_phase.py --led-brightness 25 -m adafruit-hat-pwm --led-pwm-lsb-nanoseconds=50 -p7
 ```
 
 <i>Disclaimer: you might need to tweak the path a bit </i>
 
 ## Notes
-- All of this code to interact with the matrix comes from https://github.com/hzeller/rpi-rgb-led-matrix. The only code I wrote is in the root level of this directory, and the moon_phase.py file.
 - Most of the code isn't hard coded for this size panel, but you'll need to tweak a few things if using a different sized matrix, like the text location, the circle's center point vertically, and radius of the circle.
 - Raspberry pis don't have a real time clock by default. So internet connection is required for accurately updating the time, unless you buy a RTC and connect it.
 - These instructions worked with my hardware. Mileage may vary with different setups.
@@ -48,4 +44,3 @@ To run the script on boot, I used crontab.
 - Add a real time clock so that internet is not required
 - Add a potentiometer to change the brightness while the program is running
 - 3D print a backing to cover everything up
-- Clean up the repo. Use submodules for utilizing rpi-rgb-led-matrix repo
