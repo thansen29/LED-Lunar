@@ -1,6 +1,6 @@
-These instructions assume you have soldered a power button the the SCL and GND pins already in order to work.
-
 # Instructions
+
+You will need to solder a connection to the power button on the SCL and GND pins. 
 After having cloned this repo, run the setup script from the scripts directory like `sudo sh install`
 
 If you need to uninstall, run `sudo sh uninstall`
