@@ -37,7 +37,7 @@ To run the script on boot, I used crontab.
 <i>Disclaimer: you might need to tweak the path a bit </i>
 
 ## Notes
-- I highly recommend the hardware hack to solder a wire between pins 4 and 18. It solves the flickering problem and is a must if you have a static image displayed. If you're using the hardware mod, then you'll also need to turn off onboard sound. In /boot/config.txt, change `dtparam=audio=on` to `dtparam=audio=off` and reboot.
+- I highly recommend the hardware hack to solder a wire between pins 4 and 18. It solves the flickering problem and is a must if you have a static image displayed.
 - If not using the hardware hack, substitute `adafruit-hat` everywhere you see `adafruit-hat-pwm` 
 - Most of the code isn't hard coded for this size panel, but you'll need to tweak a few things if using a different sized matrix, like the text location, the circle's center point vertically, and radius of the circle.
 - Raspberry pis don't have a real time clock by default. So internet connection is required for accurately updating the time, unless you buy a RTC and connect it.
