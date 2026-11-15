@@ -17,32 +17,56 @@ Displays the current phase the moon is in on a 32x32 LED matrix using a Raspberr
 
 ## Instructions for setup
 
-- Set up your raspberry pi first, sudo apt-get update then sudo apt-get upgrade.
-- For help with setting up the hardware, [this](https://learn.adafruit.com/adafruit-rgb-matrix-bonnet-for-raspberry-pi/driving-matrices) guide may be helpful, it was for me.
-- Clone this repo. cd LED-Lunar and run
-```
-sudo sh scripts/install
-```
-This might take around ~10 minutes to run.
+_Last updated 2026-11-15. Tested on a Raspberry Pi Zero WH running the Raspberry Pi OS that was current in November 2026._
 
-- Then you can run
+> **Changed 2026-11-15.** This section used to say to run `sudo sh scripts/install` (about 10 minutes), then `sudo python3 src/moon_phase.py ... -m adafruit-hat-pwm ...`. On current Raspberry Pi OS that script's Python build fails with `longintrepr.h: No such file or directory`, yet still prints "Installation complete!". The LED library version pinned in this repo (March 2021) is too old for current Python. The moon command also only worked if the repo was at `/home/pi/Documents/LED-Lunar`. The steps below are what worked instead.
+
+1. Set up your Raspberry Pi first: `sudo apt-get update`, then `sudo apt-get upgrade`.
+2. Clone this repo (or copy the folder to the Pi). Then fetch the LED library and switch it to a version that builds with current Python:
+   ```
+   cd LED-Lunar
+   git submodule update --init
+   cd submodules/matrix
+   git fetch origin
+   git checkout b4dc553
+   ```
+3. Install the build tools and build the library's Python bindings. On a Pi Zero this took about half an hour, and it prints nothing while it compiles. To watch progress, add `-v` after `install`.
+   ```
+   sudo apt-get install -y python3-dev python3-pip cython3 cmake
+   sudo pip install --break-system-packages .
+   ```
+   `--break-system-packages` is needed because Raspberry Pi OS refuses a plain `sudo pip install`. The scripts run as `sudo python3`, so the library has to go into the system Python.
+4. Check that it installed. This should print a file path, not an error:
+   ```
+   sudo python3 -c "import rgbmatrix.graphics; print(rgbmatrix.__file__)"
+   cd ../..
+   ```
+5. If a script stops with `snd_bcm2835: found that the Pi sound module is loaded`, add `dtparam=audio=off` to `/boot/firmware/config.txt` and reboot. The LED library and the Pi's built-in sound can't run at the same time.
+
+## Running
+
+From the `LED-Lunar` folder:
 ```
-sudo python3 src/moon_phase.py --led-brightness 25 -m adafruit-hat-pwm --led-pwm-lsb-nanoseconds=50 -p7
+# moon phase
+sudo env PYTHONPATH="$PWD" python3 src/moon_phase.py --led-brightness 25 -m adafruit-hat --led-pwm-lsb-nanoseconds=50 -p7
 ```
+- `src/moon_phase.py` has the repo's folder written into it (line 6). `env PYTHONPATH="$PWD"` lets it run wherever the repo is.
+- If you did the hardware hack in [Notes](#notes), use `adafruit-hat-pwm` instead of `adafruit-hat`.
 - Tweak those options as you see fit, this is just what worked for me.
+- Press Ctrl-C to stop.
 
 ## Run script on boot
 To run the script on boot, I used crontab.
 `sudo crontab -e`
 ```
-@reboot cd /home/pi/Documents/LED-Lunar && sudo python3 src/moon_phase.py --led-brightness 25 -m adafruit-hat-pwm --led-pwm-lsb-nanoseconds=50 -p7
+@reboot cd /home/pi/Documents/LED-Lunar && sudo env PYTHONPATH=/home/pi/Documents/LED-Lunar python3 src/moon_phase.py --led-brightness 25 -m adafruit-hat --led-pwm-lsb-nanoseconds=50 -p7
 ```
 
 <i>Disclaimer: you might need to tweak the path a bit </i>
 
 ## Notes
 - I highly recommend the hardware hack to solder a wire between pins 4 and 18. It solves the flickering problem and is a must if you have a static image displayed.
-- If not using the hardware hack, substitute `adafruit-hat` everywhere you see `adafruit-hat-pwm` 
+- The commands above use `adafruit-hat`. If you did the hardware hack, use `adafruit-hat-pwm` instead.
 - Most of the code isn't hard coded for this size panel, but you'll need to tweak a few things if using a different sized matrix, like the text location, the circle's center point vertically, and radius of the circle.
 - Raspberry pis don't have a real time clock by default. So internet connection is required for accurately updating the time, unless you buy a RTC and connect it.
 - These instructions worked with my hardware. Mileage may vary with different setups.

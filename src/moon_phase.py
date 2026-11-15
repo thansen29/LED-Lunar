@@ -3,7 +3,7 @@ import sys
 import math
 import time as t
 from rgbmatrix import graphics
-sys.path.append("/home/pi/Documents/LED-Lunar")
+sys.path.append("/home/tom/Documents/LED-Lunar")
 from submodules.matrix.bindings.python.samples.samplebase import SampleBase
 from datetime import *
 from constants import Constants
