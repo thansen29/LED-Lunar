@@ -1,0 +1,4 @@
+#!/bin/sh
+# Run the tests that need no LED hardware.
+cd "$(dirname "$0")/.." || exit 1
+exec python3 -m unittest discover -s tests -v
